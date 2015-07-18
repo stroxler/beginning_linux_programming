@@ -61,6 +61,10 @@ int main() {
     do {
         choice = getchoice("Please select an action", menu, input, output);
         printf("You have chosen: %c\n", choice);
+
+        // if you leave this off, you'll never actually see the choice!
+        sleep(2);
+
     } while (choice != 'q');
 
     // always reset tc attributes!
@@ -80,7 +84,7 @@ int getchoice(char * greet, char * choices[], FILE * input, FILE * output) {
     char *cursor, *clear;
     char **option;
 
-    /////
+    global_output = output;
 
     /* we should really be checking error conditions here */
     setupterm(NULL, fileno(output), (int *)0);
