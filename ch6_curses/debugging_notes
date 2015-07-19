@@ -1,0 +1,10 @@
+The key to debugging the cd collection app: use valgrind.
+
+To compile, do
+  gcc -g -Wall cd_coll_ch6.c -lcurses
+To run, do
+  valgrind ./a.out 2> stderr.out
+
+(curses uses stdout for all output, so the valgrind data is unaffected).
+(Also, you can print any log messages to stderr and they will similarly go
+to the file.)
