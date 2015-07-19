@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <curses.h>
 
+/* Simple program to demonstrate how windows work in the curses
+ * environment. The program is just an animation of 1 second frames
+ * that you can watch and read along with. */
+
 int main() {
     WINDOW *new_window;
     WINDOW *popup_window;
