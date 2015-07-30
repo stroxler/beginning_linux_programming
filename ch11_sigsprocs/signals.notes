@@ -1,0 +1,4 @@
+Starting on page 489 there's a long discussion of signals. Since they are
+more of a general-purpose tool, and I'm mostly interested in C for math, I'm
+not going to write any detailed notes on it. But refer there first, then to the
+docs, if you feel you need to know more about signals.

@@ -1,0 +1,13 @@
+See page 477 and 478 for a discussion of zombie processes. The gist is that
+child processes never finish terminating until the parent exits or calls wait -
+the reason being that if they did, then the parent coudn't call wait().
+
+You can see this by modifying the fork demo so that the parent terminates
+much later than the child; if you run ps in the meantime, you'll see a 
+process with <defunct> next to it - this is the child, which finished but is
+waiting for the parent to either call wait() or exit.
+
+This can be a problem if you fork many times and never wait(). It's an even
+bigger issue if the parent crashes without exiting - the child processes are
+inherited by init, which will eventually clean them up but it can take a long
+time. These are called zombie processes.
