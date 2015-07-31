@@ -1,0 +1,24 @@
+We discuss three 'types' of pipes: popen, pipe, and fifo
+
+popen and pipe actually use the same kind of anonymous pipe as a shell
+command with a | in it uses under the hood, the difference is in the view:
+  - popen lets you boot up a command via a shell (you create the shell process,
+    so there's extra overhead) as if opening a file, and either read or write
+    to it. It handles mapping the pipe created to either stdin or stdout of the
+    process you create, based on the mode. Very simple.
+  - pipe creates two raw file descriptors in your process, which you can
+    then use with the read and write functions. You then do magic using
+    fork, exec, and dup/dup2 to deal with those file descriptors as needed.
+
+A fifo is also called a "named pipe"
+
+They are basically the same thing as a pipe in terms of transferring data:
+they provide a queue which can be read/written using file descriptors, similar
+to files except that non-linear ops like seek won't always work.
+
+The difference is that the operating system also maps the pipe to a location
+in the file system, which allows you to use open() as if the fifo were an
+ordinary file.
+
+You can make a fifo from the command line using mkfifo, which is the shell
+ersion of the C library mkfifo() funciton.

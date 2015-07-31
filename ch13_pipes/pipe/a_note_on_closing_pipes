@@ -1,0 +1,27 @@
+Most of our pipe examples have ignored what happens when you boot up a
+child that loops and continuously reads from a pipe. What happens if there's
+data? What if there's no data? What if the write end is closed?
+
+Here's what happens:
+  - if there's data, it will behave as we've seen: it reads at most the
+    number of bytes you asked for, and returns the number of bytes read. If
+    more stuff is getting written, you'll just read it in your next try.
+  - if there's no data but the pipe is open, the read call will block until
+    there's at least a byte of data.
+  - if the write end of the pipe is closed (see below for notes!), then read
+    will not block, but will return 0. This is your indication that the pipe
+    is closed, it's like an EOF
+  - on an error, the read call returns -1. This also happens if you try to use
+    an invalid file descriptor (which would happen if you tried to close the
+    *read* end of the pipe and then read again).
+
+-> note: if you used a fork to deal with the pipe, there's actually a write
+   end of the file descriptor open in *both* processes. The read ends won't
+   start returning 0 on read() until *both* of the write fd's are closed. So,
+   if in your read client you want to count on this behavior, be sure to
+   close the write fd as soon as you've forked. That way you know when the
+   write server closed it's fd and/or exited.
+
+   If you forget this last point, you are likely to wind up deadlocked. Try
+   to remember this note when you wind up debugging a deadlock on a fork + pipe
+   program
