@@ -1,0 +1,66 @@
+This chapter covers three IPC tools that are collectively often called
+"System V IPC" (the Advanced Unix Programming book I have also calls them
+by this name).
+
+All three of these identify resources which are global to a computer using
+a key_t, which is an integer type defined in headers. The book doesn't say,
+but my guess is that in practice you might place the key as text in a config
+file if you needed computers to use these tools; these example programs just
+hard-code them.
+
+Naming Conventions
+------------------
+All three of these facilities have the same semantics for setting up and
+removing the process vs global resources.
+  XXget always creates a local object pointing to a global resource which
+    might or might not exist.
+  XXctl is always used for global control. You use this to make sure the
+    global resource exists and / or is set as desired. For example, in our
+    simple sempahore api wrapper, we use semctl to create and set the global
+    semaphore to 1.
+
+  The other functions are specific:
+    semop
+    shmat, shmdt
+    msgsnd msgrcv
+
+
+Semaphores
+----------
+
+The semaphores we use in this chapter are very similar in principle to the
+ones used in Chapter 12. The library is completely different, and is focused
+on IPC rather than inter-thread communication. The api is a lot more
+complicated, but in the example we show how to wrap it in simpler functions
+so that semaphores may be used in a binary way as locks, just like we did
+in Chapter 12.
+
+Shared Memory
+-------------
+
+Typically IPC is via some form of i/o: files provide a simple option;
+sockets are common in applications that can be networked (like MYSQL); pipes
+are physically in ram, but the os makes them look like files.
+
+But the System V shared memory allows shared random-access memory. It's not
+guaranteed to be the same phycial memory - the os can choose to mirror the
+allocated memory - but on many computers it in fact is the same physical
+memory.
+
+The shared memory library provides no methods for synchroniziong access to
+shared memory, it's up to the programmer to use some other method (very likely
+the semaphores just discussed, but possibly pipes, file locks, or message
+queues) to communicate information about who should look at what when.
+
+Messages
+--------
+
+System V message queues provide a slightly easier alternative to most of the
+same functionality as using fifos. The main advantage is it releives you of
+all the file-descriptor nonsense, allowing you to use an api much closer to
+the logical domain of your problem: send and recieve chunks of bytes.
+
+A disadvantage is that the arbitrary key_t int used to identify global
+system V resources is much less transparent than the file-like approach to
+identifying a fifo / named pipe. (Of course there are anonymous pipes, but they
+aren't global, so there's less concern about your code being leaky).
