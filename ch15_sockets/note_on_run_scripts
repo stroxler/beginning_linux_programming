@@ -1,0 +1,6 @@
+My attempt at killing the jobs isn't working. I tried awk with
+both {print $2} and {print $3}, and neither one seems to reliably
+kill the server
+
+This would be a nice thing to fix on a later pass... at the moment I'm
+not motivated heh

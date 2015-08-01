@@ -1,0 +1,5 @@
+Ubuntu 14.04 has inetd (xinetd) running by default, but it has the daytime
+service disabled. To run these examples, you first need to enable them:
+  vim /etc/xinetd.d/daytime
+and then restart inetd:
+  service xinetd reload
