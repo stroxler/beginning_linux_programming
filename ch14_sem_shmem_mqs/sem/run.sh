@@ -1,6 +1,6 @@
 gcc sem_ex.c
 
-echo "Starting first process, which greates semaphore..."
+echo "Starting first process, which creates semaphore..."
 ./a.out 1 &
 echo "Starting next process..."
 ./a.out &
